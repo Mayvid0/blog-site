@@ -21,12 +21,22 @@ mongoose.connect(mongoURL, {
 
 app.set('view engine','ejs')
 
-app.get('/',async(req,res)=>{
+// app.get('/',async(req,res)=>{
     
-    const articles= await Article.find().sort({ dateCreated: 'desc'})
-    res.render('articles/index', {articles : articles})  //hum bhej skte hain koi bhi object to be rendered
-})
+//     const articles= await Article.find().sort({ dateCreated: 'desc'})
+//     res.render('articles/index', {articles : articles})  //hum bhej skte hain koi bhi object to be rendered
+// })
 
+app.get('/', async (req, res) => {
+  const specificArticleId = '64ce4e6a2e465a0034d4cc92';
+
+  const specificArticle = await Article.findById(specificArticleId);
+  const otherArticles = await Article.find({ _id: { $ne: specificArticleId } }).sort({ dateCreated: 'desc' });
+
+  const articles = [specificArticle, ...otherArticles];
+
+  res.render('articles/index', { articles: articles });
+});
 
 
 app.use(express.urlencoded({extended: false}))

@@ -3,6 +3,7 @@ const router= express.Router()
 const mongo = require('mongoose')
 const Article= require('./../models/articles')
 const { default: mongoose } = require('mongoose')
+require('dotenv').config()
 
 
 router.get('/new', (req,res)=>{
@@ -45,16 +46,27 @@ router.put('/:id', async (req,res,next)=>{
 //need a library method-override
 
 router.delete('/:id',async (req,res)=>{
+    if(req.params.id == process.env.id){
+      res.status(403).send("Ha!! u really thought. U can't delete this");
+    }
+    else{
     await Article.findByIdAndDelete(req.params.id)
     res.redirect('/')
+    }
+    
   })
 
 function saveArticleAndRedirect(path){
     return async (req,res)=>{
-        let article= req.article
+      let article= req.article
+      if(req.params.id !== process.env.id){       
         article.title= req.body.title
         article.description= req.body.description
         article.markdown = req.body.markdown
+        if(path=='new' ){
+          article.author= req.body.author
+        }
+      }
     try{
         article= await article.save()
         res.redirect(`/articles/${article.slug}`)

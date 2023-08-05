@@ -22,8 +22,9 @@
                 <div class="card-body">
                     <h4 class="card-title"> <%= article.title   %></h4>
                     <div class="card-subtitle text-muted mb-2">
-                        <%= article.dateCreated.toLocaleDateString() %>
+                      <%= `${article.dateCreated.toLocaleDateString('en-US')} --${article.author}` %>
                     </div>
+      
                     <div class="card-text mb-2"><%= article.description %></div>
                     <a href="articles/<%= article.slug %>" class="btn btn-primary">Read More</a>
                     <a href="articles/edit/<%= article.id %>" class="btn btn-info">Edit</a>
